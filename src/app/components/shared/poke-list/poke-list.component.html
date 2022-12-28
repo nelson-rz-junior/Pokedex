@@ -1,4 +1,6 @@
-<ng-template ngFor let-pokemon [ngForOf]="allPokemons">
+<poke-nav (sendData)="setResult($event)"></poke-nav>
+
+<ng-template ngFor let-pokemon [ngForOf]="apiResult.results">
   <a *ngIf="pokemon.details" class="pokemon" style="cursor: pointer;" (click)="details(pokemon.details.id)">
     <section class="pokemon__status">
       <h2>
@@ -11,7 +13,7 @@
       </ul>
     </section>
     <section class="pokemon__image">
-      <img [src]="pokemon.details.sprites.other.dream_world.front_default" [alt]="pokemon.name">
+      <img [src]="getImage(pokemon)" [alt]="pokemon.name">
     </section>
   </a>
 </ng-template>

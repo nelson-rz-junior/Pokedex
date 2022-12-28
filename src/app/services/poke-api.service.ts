@@ -1,31 +1,45 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { environment } from 'src/environments/environment';
-import { map, Observable, take, tap } from 'rxjs';
+import { Observable, take, tap } from 'rxjs';
+import { ApiResult } from '../models/ApiResult';
+import { Pokemon } from '../models/Pokemon';
+import { PokemonDetail } from '../models/PokemonDetail';
 
 @Injectable({
   providedIn: 'root'
 })
 export class PokeApiService {
-  private baseApi: string = `${environment.apiURL}/?offset=0&limit=100`;
-
   constructor(private http: HttpClient) { }
 
   // The tap operator takes an input observable perform some action and returns the same input observable
-  public getAllPokemons(): Observable<any> {
-    return this.http.get<any>(this.baseApi).pipe(
+  public getAllPokemons(url: string): Observable<ApiResult> {
+    return this.http.get<ApiResult>(url).pipe(
       take(1),
-      tap(allPokemons => {
-        allPokemons.results.map((pokemon: any) => { // js map
+      tap(apiResult => {
+        apiResult.results.map((pokemon: Pokemon) => { // js map
           this.getPokemon(pokemon.url).subscribe(
-            itemResult => pokemon.details = itemResult
+            itemResult => {
+              pokemon.details = {
+                id: itemResult.id, types: itemResult.types, sprites: {
+                  front_default: itemResult.sprites.front_default,
+                  other: {
+                    home: {
+                      front_default: itemResult.sprites.other.home.front_default
+                    },
+                    'official-artwork': {
+                      front_default: itemResult.sprites.other['official-artwork'].front_default
+                    }
+                  }
+                }
+              };
+            }
           );
         });
       })
     );
   }
 
-  public getPokemon(url: string): Observable<any> {
-    return this.http.get<any>(url).pipe(take(1));
+  public getPokemon(url: string): Observable<PokemonDetail> {
+    return this.http.get<PokemonDetail>(url).pipe(take(1));
   }
 }

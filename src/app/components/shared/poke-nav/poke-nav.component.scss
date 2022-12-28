@@ -1,0 +1,26 @@
+@import '../../../../config-scss/rem-calc.scss';
+
+:host {
+  display: flex;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  margin-bottom: rem-calc(10);
+  position: relative;
+  width: 100%;
+
+  span {
+    color: white;
+  }
+
+  button {
+    background: rgb(238, 236, 231);
+    font-size: rem-calc(13);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border-radius: rem-calc(5);
+    width: rem-calc(60);
+    margin-bottom: rem-calc(5);
+    padding: rem-calc(5);
+  }
+}

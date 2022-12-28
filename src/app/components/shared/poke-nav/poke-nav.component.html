@@ -1,0 +1,3 @@
+<button (click)="load(apiResult.previous)" [disabled]="!apiResult.previous">Back</button>
+<span>{{apiResult.count}} pokemons</span>
+<button (click)="load(apiResult.next)" [disabled]="!apiResult.next">Next</button>
