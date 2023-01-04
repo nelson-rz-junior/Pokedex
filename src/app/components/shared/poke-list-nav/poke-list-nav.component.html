@@ -1,0 +1,9 @@
+<section>
+  <button (click)="load(firstUrl)" [disabled]="!apiResult.previous">First</button>
+  <button (click)="load(apiResult.previous)" [disabled]="!apiResult.previous">Back</button>
+</section>
+<span>Page {{currentPage}} of {{totalPages}} | Total: {{apiResult.count}} pokemons</span>
+<section>
+  <button (click)="load(lastUrl)" [disabled]="!apiResult.next">Last</button>
+  <button (click)="load(apiResult.next)" [disabled]="!apiResult.next">Next</button>
+</section>

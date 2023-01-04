@@ -1,20 +1,20 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { PokeNavComponent } from './poke-nav.component';
+import { PokeListNavComponent } from './poke-list-nav.component';
 
-describe('PokeNavComponent', () => {
-  let component: PokeNavComponent;
-  let fixture: ComponentFixture<PokeNavComponent>;
+describe('PokeListNavComponent', () => {
+  let component: PokeListNavComponent;
+  let fixture: ComponentFixture<PokeListNavComponent>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ PokeNavComponent ]
+      declarations: [ PokeListNavComponent ]
     })
     .compileComponents();
   });
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(PokeNavComponent);
+    fixture = TestBed.createComponent(PokeListNavComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });
