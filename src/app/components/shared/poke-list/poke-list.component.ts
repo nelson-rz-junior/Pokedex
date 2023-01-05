@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { NgxSpinnerService } from 'ngx-spinner';
 import { Subject } from 'rxjs';
-import { debounceTime, take } from 'rxjs/operators';
+import { debounceTime } from 'rxjs/operators';
 import { ApiResult } from 'src/app/models/ApiResult';
 import { Pokemon } from 'src/app/models/Pokemon';
 import { PokeApiService } from 'src/app/services/poke-api.service';
@@ -14,11 +14,12 @@ import { environment } from 'src/environments/environment';
   styleUrls: ['./poke-list.component.scss']
 })
 export class PokeListComponent implements OnInit {
+  private pagedApiResult: ApiResult = {} as ApiResult;
   public query: string = '';
+  public apiError: boolean = false;
   public searchApiResult: ApiResult = {} as ApiResult;
   public termSearchChanged: Subject<string> = new Subject<string>();
   private allApiResult: ApiResult = {} as ApiResult;
-  private pagedApiResult: ApiResult = {} as ApiResult;
 
   constructor(private pokeApiService: PokeApiService,
     private router: Router,
@@ -27,12 +28,10 @@ export class PokeListComponent implements OnInit {
     ngOnInit(): void {
       this.spinner.show();
 
-      let url = `${environment.apiURL}/?offset=0&limit=10000`;
-      this.pokeApiService.getAllPokemons(url, 10000).subscribe(
-        (response: ApiResult) => {
-          this.allApiResult = response;
-        }
-      )
+      this.pokeApiService.getAllPokemons(`${environment.apiURL}/?offset=0&limit=10000`, 10000).subscribe({
+        next: (response: ApiResult) => this.allApiResult = response,
+        error: (error: any) => this.apiError = true
+      })
       .add(() => this.spinner.hide());
     }
 
@@ -57,17 +56,20 @@ export class PokeListComponent implements OnInit {
     public getSearch(value: string) {
       if (!this.termSearchChanged.observed) {
         this.termSearchChanged.pipe(debounceTime(1000))
-          .subscribe((filterBy) => {
-            if (filterBy === null || filterBy === '') {
-              this.query = '';
-              this.searchApiResult.results = this.pagedApiResult.results;
-            }
-            else {
-              this.query = value;
-              this.searchApiResult.results = this.allApiResult.results.filter((res: Pokemon) => {
-                return res.name.indexOf(filterBy) > -1;
-              });
-            }
+          .subscribe({
+            next: (filterBy) => {
+              if (filterBy === null || filterBy === '') {
+                this.query = '';
+                this.searchApiResult.results = this.pagedApiResult.results;
+              }
+              else {
+                this.query = value;
+                this.searchApiResult.results = this.allApiResult.results.filter((res: Pokemon) => {
+                  return res.name.indexOf(filterBy) > -1;
+                });
+              }
+            },
+            error: (error: any) => this.apiError = true
           });
       }
 

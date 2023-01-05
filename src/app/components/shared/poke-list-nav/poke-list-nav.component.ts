@@ -28,13 +28,13 @@ export class PokeListNavComponent implements OnInit {
   public load(url: string) {
     this.spinner.show();
 
-    this.pokeApiService.getAllPokemons(url, environment.pageSize).subscribe(
-      (response: ApiResult) => {
+    this.pokeApiService.getAllPokemons(url, environment.pageSize).subscribe({
+      next: (response: ApiResult) => {
         this.apiResult = response;
         this.emitApiResult.emit(response);
         this.setPageParams(url, this.apiResult.count)
       }
-    )
+    })
     .add(() => {
       this.spinner.hide();
     });

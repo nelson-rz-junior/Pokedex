@@ -1,22 +1,26 @@
-<poke-search (emitSearch)="getSearch($event)"></poke-search>
-<poke-list-nav *ngIf="query == ''" (emitApiResult)="setApiResult($event)"></poke-list-nav>
+<ng-template [ngIf]="!apiError">
+  <poke-search (emitSearch)="getSearch($event)"></poke-search>
+  <poke-list-nav *ngIf="query == ''" (emitApiResult)="setApiResult($event)"></poke-list-nav>
 
-<section class="listing">
-  <ng-template ngFor let-pokemon [ngForOf]="searchApiResult.results">
-    <a *ngIf="pokemon.details" class="pokemon" [routerLink]="['/details', pokemon.details.id]">
-      <section class="pokemon__status">
-        <h2>
-          {{pokemon.name}}
-        </h2>
-        <ul>
-          <li *ngFor="let item of pokemon.details.types">
-            {{item.type.name}}
-          </li>
-        </ul>
-      </section>
-      <section class="pokemon__image">
-        <img *ngIf="getImage(pokemon)" [src]="getImage(pokemon)" [alt]="pokemon.name">
-      </section>
-    </a>
-  </ng-template>
-</section>
+  <section class="listing">
+    <ng-template ngFor let-pokemon [ngForOf]="searchApiResult.results">
+      <a *ngIf="pokemon.details" class="pokemon" [routerLink]="['/details', pokemon.details.id]">
+        <section class="pokemon__status">
+          <h2>
+            {{pokemon.name}}
+          </h2>
+          <ul>
+            <li *ngFor="let item of pokemon.details.types">
+              {{item.type.name}}
+            </li>
+          </ul>
+        </section>
+        <section class="pokemon__image">
+          <img *ngIf="getImage(pokemon)" [src]="getImage(pokemon)" [alt]="pokemon.name">
+        </section>
+      </a>
+    </ng-template>
+  </section>
+</ng-template>
+
+<img src="assets/error.png" alt="Ocorreu um erro no PokeDex" width="100%" *ngIf="apiError">

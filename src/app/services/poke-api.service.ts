@@ -19,18 +19,18 @@ export class PokeApiService {
       take(1),
       tap(apiResult => {
         apiResult.results.map((pokemon: Pokemon) => {
-          this.getPokemon(pokemon.url).subscribe(
-            itemResult => {
+          this.getPokemon<PokemonDetail>(pokemon.url).subscribe({
+            next: itemResult => {
               pokemon.details = this.fillPokemonDetails(itemResult);
             }
-          );
+          });
         });
       })
     );
   }
 
-  public getPokemon(url: string): Observable<PokemonDetail> {
-    return this.http.get<PokemonDetail>(url).pipe(take(1));
+  public getPokemon<T>(url: string): Observable<T> {
+    return this.http.get<T>(url).pipe(take(1));
   }
 
   private setUrlParams(url: string, pageSize: number): string {
@@ -44,6 +44,9 @@ export class PokeApiService {
   private fillPokemonDetails(apiPokemonDetails: PokemonDetail): PokemonDetail {
     return {
       id: apiPokemonDetails.id,
+      name: apiPokemonDetails.name,
+      species: apiPokemonDetails.species,
+      stats: apiPokemonDetails.stats,
       types: apiPokemonDetails.types,
       sprites: {
         front_default: apiPokemonDetails.sprites.front_default,
